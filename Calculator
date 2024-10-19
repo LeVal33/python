@@ -1,0 +1,59 @@
+from tkinter import *
+
+color = "#331b85"
+color2 = "#190752"
+font = ("Calibri", 20)
+
+root = Tk()
+root.title("Calculator")
+root.iconbitmap("Icons/Icon calculator.ico")
+root.geometry("300x400")
+root.maxsize(300, 400)
+root.minsize(300, 400)
+root.config(bg=color)
+
+def create_button(text, x, y, command):
+    btn = Button(root, font=font, bg=color2, fg="white", text=text, command=command, activebackground=color)
+    btn.place(x=x, y=y, width=62.5, height=68)
+
+def button_clicked(button):
+    if button == "C":
+        screen1.config(text="")
+    elif button == "=":
+        try:
+            screen1.config(text=eval(str(screen1.cget("text"))))
+        except (SyntaxError, NameError, TypeError, ZeroDivisionError, ValueError):
+            screen1.config(text="Error!")
+    else:
+        screen1.config(text=str(screen1.cget("text")) + str(button))
+
+def create_all_buttons():
+    create_button("C", 10, 322, lambda: button_clicked("C"))
+    create_button("0", 82.5, 322, lambda: button_clicked("0"))
+    create_button("=", 155, 322, lambda: button_clicked("="))
+    create_button("÷", 227.5, 322, lambda: button_clicked("/"))
+    create_button("1", 10, 244, lambda: button_clicked(1))
+    create_button("2", 82.5, 244, lambda: button_clicked(2))
+    create_button("3", 155, 244, lambda: button_clicked(3))
+    create_button("×", 227.5, 244, lambda: button_clicked("*"))
+    create_button("4", 10, 166, lambda: button_clicked(4))
+    create_button("5", 82.5, 166, lambda: button_clicked(5))
+    create_button("6", 155, 166, lambda: button_clicked(6))
+    create_button("-", 227.5, 166, lambda: button_clicked("-"))
+    create_button("7", 10, 88, lambda: button_clicked(7))
+    create_button("8", 82.5, 88, lambda: button_clicked(8))
+    create_button("9", 155, 88, lambda: button_clicked(9))
+    create_button("+", 227.5, 88, lambda: button_clicked("+"))
+
+
+
+
+
+
+
+screen1 = Label(root, font=font, bg=color2, fg="white", text="", relief="ridge")
+screen1.place(x=10, y=10, width=280, height=68)
+create_all_buttons()
+
+
+root.mainloop()
