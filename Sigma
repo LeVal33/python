@@ -1,0 +1,117 @@
+from tkinter import *
+import matplotlib.pyplot as plt
+
+font = ("Calibri", 75)
+font2 = ("Calibri", 20)
+color = "#03299c"
+color2 = "#8fa5ff"
+
+start = 0
+calc = ""
+
+graphss_y = []
+
+def command():
+    graph()
+    generate_graph()
+    global start, calc
+    lbl_result.config(text="")
+    start = start_n.get()
+    end = end_n.get()
+    calc = calculation.get()
+
+    if not start or not end or not calc:
+        print("Missing entries!")
+        lbl_result.config(text="Missing entries!")
+        return
+
+    results = []
+    try:
+        for n in range(int(start), int(end) + 1):
+            # Remplacer 'n' par la valeur actuelle de la boucle dans l'expression
+            result = eval(calc)
+            results.append(result)
+
+        print(eval("+".join(str(r) for r in results)))
+        lbl_result.config(text=eval("+".join(str(r) for r in results)))
+    except (ValueError, RecursionError):
+        print("Error!")
+        lbl_result.config(text="Error!")
+
+# fonction pour le graphique
+def graph():
+    global graphss_y
+    calc1 = calculation.get()
+    if not calc1:
+        print("Error!")
+        return
+
+    graphss_y = []
+    for n1 in range(1, 101):
+        graphs_y = []
+        for i in range(1, n1 + 1):
+            graph_y = eval(calc1.replace("n", "i"))
+            graphs_y.append(graph_y)
+        graphss_y.append(eval("+".join(str(r) for r in graphs_y)))
+    print(graphss_y)
+
+# générer le graphique
+def generate_graph():
+    # données
+    x = list(range(1, 101))
+    y = graphss_y
+
+    # créer le graphique
+    plt.plot(x, y)
+    plt.title(f"Graphique de Sigma {calculation.get()} avec n allant de 1 à 100")
+    plt.xlabel("n")
+    plt.ylabel(f"Σ {calculation.get()}")
+    plt.show()
+
+
+
+root = Tk()
+root.title("Sigma")
+root.geometry("400x400")
+root.maxsize(400, 400)
+root.minsize(400, 400)
+root.config(bg=color)
+
+# créer le symbole Sigma
+sigma = Label(root, text="Σ", font=font, bg=color, fg="white")
+sigma.place(x=62, y=26)
+
+# créer la fin de n
+end_n = Entry(root, font=font2, width=3, bg=color2)
+end_n.place(x=65, y=20)
+
+# créer le début de n
+start_n = Entry(root, font=font2, width=3, bg=color2)
+start_n.place(x=65, y=128)
+
+# créer le n=
+n_equals = Label(root, text="n = ", font=font2, bg=color, fg="white")
+n_equals.place(x=20, y=127)
+
+# créer le calcul
+calculation = Entry(root, font=font2, width=15, bg=color2)
+calculation.place(x=112, y=85)
+
+# créer le bouton soumettre
+submit = Button(root, font=font2, bg=color2, fg="white", text="Submit", activebackground=color, command=command)
+submit.place(x=47, y=190, height=40)
+
+# créer le resultat
+lbl_result = Label(root, text="", font=font2, bg=color, fg="white")
+lbl_result.place(x=54, y=250)
+
+
+
+
+
+
+
+
+
+
+root.mainloop()
