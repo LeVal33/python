@@ -1,0 +1,146 @@
+from tkinter import *
+import numpy as np
+import matplotlib.pyplot as plt
+
+color = "#141991"
+color2 = "#3942ed"
+color3 = "#b0c4de"
+font = ("Calibri", 20)
+
+delta, a, b, c = 0, 0, 0, 0
+x_1, x_2, x0, x1, x2 = 0, 0, 0, 0, 0
+
+def calculate_delta():
+    label_error.config(text=""), label_delta.config(text=""), label_solution1.config(text=""), label_solution2.config(text="")
+    global delta, a, b, c
+    a, b, c = entry_a.get(), entry_b.get(), entry_c.get()
+    if not a or a == "0" or a == "a":
+        label_error.config(text="Error: a cannot be zero")
+        return
+    if not b or b == "b":
+        b = 0
+    if not c or c == "c":
+        c = 0
+    a, b, c = float(a), float(b), float(c)
+    delta = b ** 2 - 4 * a * c
+    label_delta.config(text=f"Δ = {delta}")
+
+    if delta > 0:
+        calculate_x1andx2()
+    elif delta == 0:
+        calculate_x0()
+    elif delta < 0:
+        calculate_x_1andx_2()
+    graph()
+
+def calculate_x1andx2():
+    global x1, x2
+    x1 = (-b + delta ** 0.5) / (2 * a)
+    x2 = (-b - delta ** 0.5) / (2 * a)
+    label_solution1.config(text=f"x1 = (-{b} + √{delta}) / (2 × {a})\nx1 = {x1}", justify="left")
+    label_solution2.config(text=f"x2 = (-{b} - √{delta}) / (2 × {a})\nx2 = {x2}", justify="left")
+
+def calculate_x0():
+    global x0
+    x0 = -b / (2 * a)
+    label_solution1.config(text=f"x0 = -{b} / (2 × {a})\nx0 = {x0}", justify="left")
+
+def calculate_x_1andx_2():
+    global x_1, x_2
+    x_1 = (-b + 1j * -delta ** 0.5) / (2 * a)
+    x_2 = (-b - 1j * -delta ** 0.5) / (2 * a)
+    label_solution1.config(text=f"x-1 = (-{b} + i√{-delta}) / (2 × {a})\nx-1 = {x_1.real} +\n          {x_1.imag}", justify="left")
+    label_solution2.config(text=f"x-2 = (-{b} + i√{-delta}) / (2 × {a})\nx-2 = {x_2.real} +\n          {x_2.imag}", justify="left")
+
+def onfocusin(entry, letter, event):
+    if entry.get() == letter:
+        entry.delete(0, END)
+        entry.config(fg="white")
+
+def onfocusout(entry, letter, event):
+    if entry.get() == "":
+        entry.insert(0, letter)
+        entry.config(fg=color3)
+
+def f(x):
+    return a * x ** 2 + b * x + c
+
+def graph():
+    # Créer les valeurs de x
+    x = np.linspace(-100, 100, 1000)
+
+    # Calculer y en utilisant la fonction f(x)
+    y = f(x)
+
+    # Tracer le graphique
+    plt.plot(x, y, label=f'f(x) = {a}x^2 + {b}x + {c}')
+    plt.title("Graph of the 2nd degree function")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.axhline(0, color='black',linewidth=0.5)  # Ligne horizontale (axe des x)
+    plt.axvline(0, color='black',linewidth=0.5)  # Ligne verticale (axe des y)
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+root = Tk()
+root.title("2nd degree solver")
+root.geometry("600x600")
+root.maxsize(600, 600)
+root.minsize(600, 600)
+root.config(bg=color)
+
+entry_a = Entry(root, font=font, bg=color2, fg=color3, width=3)
+entry_a.insert(0, "a")
+entry_a.bind("<FocusIn>", lambda event: onfocusin(entry_a, "a", event))
+entry_a.bind("<FocusOut>", lambda event: onfocusout(entry_a, "a", event))
+entry_a.place(x=20, y=20)
+
+label_a = Label(root, font=font, text="x^2 + ", bg=color, fg="white")
+label_a.place(x=70, y=20)
+
+entry_b = Entry(root, font=font, bg=color2, fg=color3, width=3)
+entry_b.insert(0, "b")
+entry_b.bind("<FocusIn>", lambda event: onfocusin(entry_b, "b", event))
+entry_b.bind("<FocusOut>", lambda event: onfocusout(entry_b, "b", event))
+entry_b.place(x=140, y=20)
+
+label_b = Label(root, font=font, text="x + ", bg=color, fg="white")
+label_b.place(x=190, y=20)
+
+entry_c = Entry(root, font=font, bg=color2, fg=color3, width=3)
+entry_c.insert(0, "c")
+entry_c.bind("<FocusIn>", lambda event: onfocusin(entry_c, "c", event))
+entry_c.bind("<FocusOut>", lambda event: onfocusout(entry_c, "c", event))
+entry_c.place(x=230, y=20)
+
+label_c = Label(root, font=font, text=" = 0", bg=color, fg="white")
+label_c.place(x=280, y=20)
+
+solve = Button(root, font=font, bg=color2, fg="white", text="Solve", activebackground=color, command=calculate_delta)
+solve.place(x=20, y=80, height=40)
+
+label_error = Label(root, font=font, bg=color, fg="white")
+label_error.place(x=120, y=80)
+
+label_delta = Label(root, font=font, bg=color, fg="white")
+label_delta.place(x=20, y=140)
+
+label_solution1 = Label(root, font=font, bg=color, fg="white")
+label_solution1.place(x=20, y=200)
+
+label_solution2 = Label(root, font=font, bg=color, fg="white")
+label_solution2.place(x=20, y=340)
+
+
+
+
+
+
+
+
+
+
+
+root.mainloop()
