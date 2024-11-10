@@ -1,0 +1,39 @@
+from tkinter import *
+from random import *
+from string import *
+
+color1 = "#fbdb0c"
+color2 = "#0057ad"
+font = ("Calibri", 25)
+font2 = ("Calibri", 20)
+
+up = ascii_uppercase
+do_vo = ["ɑ", "e", "i", "o", "u", "y", "ə", "œ", "ɑ̃", "œ̃", "à", "â", "ä", "é", "è", "ê", "ë", "î", "ï", "ô", "ö", "ù", "û", "ü", "ÿ"]
+do_co = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z", "ç"]
+
+def generate():
+    name = ""
+    name += choice(up)
+    for i in range(randint(2, 20)):
+        if i % 2 == 0:
+            name += choice(do_vo)
+        else:
+            name += choice(do_co)
+    btn.config(text="Retry")
+    lbl.config(text=name)
+
+
+root = Tk()
+root.title("Ikea")
+root.config(bg=color1)
+root.geometry("350x350")
+root.maxsize(350, 350)
+root.minsize(350, 350)
+
+lbl = Label(root, bg=color1, font=font, fg=color2, text="Générateur de nom\nde meuble Ikea")
+lbl.pack(expand=True)
+
+btn = Button(root, bg=color2, fg=color1, font=font2, text="Générer", activebackground=color1, command=generate)
+btn.pack(expand=True)
+
+root.mainloop()
